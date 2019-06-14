@@ -10,6 +10,9 @@ from random import shuffle
 
 from nets import nets_factory
 import op_util
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 
 home_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -44,12 +47,13 @@ def main(_):
         FLAGS.Distillation = None
         
     (train_images, train_labels), (val_images, val_labels) = load_data()
-    
-    dataset_len, *image_size = train_images.shape
+    print(train_images.shape)
+    dataset_len, image_size_h, image_size_w, image_size_k = train_images.shape
     num_label = int(np.max(train_labels)+1)
     with tf.Graph().as_default() as graph:
         # make placeholder for inputs
-        image_ph = tf.placeholder(tf.uint8, [None]+image_size)
+        # image_ph = tf.placeholder(tf.uint8, [None]+image_size)
+        image_ph = tf.placeholder(tf.uint8, [None] + [image_size_h, image_size_w, image_size_k])
         label_ph = tf.placeholder(tf.int32, [None])
         is_training_ph = tf.placeholder(tf.int32,[])
         is_training = tf.equal(is_training_ph, 1)

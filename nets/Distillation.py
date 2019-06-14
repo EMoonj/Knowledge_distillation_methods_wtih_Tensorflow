@@ -52,11 +52,11 @@ def Attention_transfer(student, teacher, beta = 1e3):
     return tf.add_n([Attention(std, tch) for i, std, tch in zip(range(len(student)), student, teacher)])
   
 def FSP(students, teachers, weight = 1e-3):
-    '''
-    Junho Yim, Donggyu Joo, Jihoon Bae, and Junmo Kim.
-    A gift from knowledge distillation: Fast optimization, network minimization and transfer learning. 
-    In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 4133–4141, 2017.
-    '''
+
+    # Junho Yim, Donggyu Joo, Jihoon Bae, and Junmo Kim.
+    # A gift from knowledge distillation: Fast optimization, network minimization and transfer learning.
+    # In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 41334141, 2017.
+
     def Grammian(top, bot):
         with tf.variable_scope('Grammian'):
             t_sz = top.get_shape().as_list()
@@ -81,21 +81,21 @@ def FSP(students, teachers, weight = 1e-3):
         return tf.add_n(Dist_loss)*weight
     
 def DML(student, teacher):
-    '''
-    Ying Zhang, Tao Xiang, Timothy M. Hospedales, Huchuan Lu.
-    Deep mutual learning.
-    IEEE Conference on Computer Vision and Pattern Recognition. 2018.
-    '''
+
+    # Ying Zhang, Tao Xiang, Timothy M. Hospedales, Huchuan Lu.
+    # Deep mutual learning.
+    # IEEE Conference on Computer Vision and Pattern Recognition. 2018.
+
     with tf.variable_scope('KD'):
         return (tf.reduce_mean(tf.reduce_sum(tf.nn.softmax(teacher)*(tf.nn.log_softmax(teacher)-tf.nn.log_softmax(student)),1)) +
                 tf.reduce_mean(tf.reduce_sum(tf.nn.softmax(student)*(tf.nn.log_softmax(student)-tf.nn.log_softmax(teacher)),1)))/2
     
 def KD_SVD(student_feature_maps, teacher_feature_maps, dist_type = 'SVD'):
-    '''
-    Seung Hyun Lee, Dae Ha Kim, and Byung Cheol Song.
-    Self-supervised knowledge distillation using singular value decomposition. In
-    European Conference on ComputerVision, pages 339–354. Springer, 2018.
-    '''
+    # '''
+    # Seung Hyun Lee, Dae Ha Kim, and Byung Cheol Song.
+    # Self-supervised knowledge distillation using singular value decomposition. In
+    # European Conference on ComputerVision, pages 339354. Springer, 2018.
+    # '''
     with tf.variable_scope('Distillation'):
         GNN_losses = []
         K = 4
@@ -134,11 +134,11 @@ def KD_SVD(student_feature_maps, teacher_feature_maps, dist_type = 'SVD'):
         return transfer_loss
 
 def AB_distillation(student, teacher, margin=1., weight = 3e-3):
-    '''
-    Byeongho Heo,  Minsik Lee,  Sangdoo Yun,  and Jin Young Choi.   
-    Knowledge transfer via distillation of activation boundaries formed by hidden neurons.
-    arXiv preprint arXiv:1811.03233, 2018.
-    '''
+    # '''
+    # Byeongho Heo,  Minsik Lee,  Sangdoo Yun,  and Jin Young Choi.
+    # Knowledge transfer via distillation of activation boundaries formed by hidden neurons.
+    # arXiv preprint arXiv:1811.03233, 2018.
+    # '''
     def criterion_alternative_L2(source, target, margin, num):
         with tf.variable_scope('criterion_alternative_L2'):
             Ds = source.get_shape().as_list()[-1]
@@ -154,11 +154,11 @@ def AB_distillation(student, teacher, margin=1., weight = 3e-3):
                     for i, std, tch in zip(range(len(student)), student, teacher)])*weight
     
 def RKD(source, target, l = [1e2,2e2]):
-    '''
-    Wonpyo Park, Dongju Kim, Yan Lu, Minsu Cho.  
-    relational knowledge distillation.
-    arXiv preprint arXiv:1904.05068, 2019.
-    '''
+    # '''
+    # Wonpyo Park, Dongju Kim, Yan Lu, Minsu Cho.
+    # relational knowledge distillation.
+    # arXiv preprint arXiv:1904.05068, 2019.
+    # '''
     with tf.variable_scope('Relational_Knowledge_distillation'):
         def Huber_loss(x,y):
             with tf.variable_scope('Huber_loss'):
